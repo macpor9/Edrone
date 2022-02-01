@@ -39,14 +39,16 @@ public class JobService {
         Set<String> generatedStrings = generateStringsList(createJobRequest);
         File file = generateFileWithStringsList(generatedStrings);
         Job job = new Job(file);
+
         return jobRepository.save(job);
     }
 
     private File generateFileWithStringsList(Set<String> generatedStrings) {
         File file = null;
         try {
-            file = new File(UUID.randomUUID() + ".txt");
+            file = generateFileWithName();
             FileOutputStream fileOutputStream = new FileOutputStream(file);
+
             for (String s : generatedStrings) {
                 fileOutputStream.write(s.getBytes(StandardCharsets.UTF_8));
                 fileOutputStream.write("\n".getBytes(StandardCharsets.UTF_8));
@@ -57,6 +59,14 @@ public class JobService {
         }
 
         return file;
+    }
+
+    private File generateFileWithName() {
+        String name = "";
+        do {
+            name = UUID.randomUUID() + ".txt";
+        } while (jobRepository.existsByFile(new File(name)));
+        return new File(name);
     }
 
 
@@ -70,7 +80,7 @@ public class JobService {
     }
 
     private String generateSingleString(int length, List<Character> allowedChars) {
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
             char newChar = allowedChars.get(random.nextInt(allowedChars.size()));
             stringBuilder.append(newChar);

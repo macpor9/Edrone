@@ -44,7 +44,7 @@ public class JobResource {
     @PostMapping
     @Validated
     @Async("threadPoolTaskExecutor")
-    public CompletableFuture<ResponseEntity<?>> createNewJob(@Valid @RequestBody CreateJobRequest createJobRequest, HttpServletRequest request) {
+    public CompletableFuture<String> createNewJob(@Valid @RequestBody CreateJobRequest createJobRequest, HttpServletRequest request) {
         log.info("creating new job with {} strings", createJobRequest.getNumberOfString());
         Job job = jobService.createJob(createJobRequest);
         URI location = ServletUriComponentsBuilder
@@ -52,7 +52,7 @@ public class JobResource {
                 .path("jobs/{id}")
                 .buildAndExpand(job.getId())
                 .toUri();
-        return CompletableFuture.completedFuture(ResponseEntity.created(location).build());
+        return CompletableFuture.completedFuture(location.toString());
     }
 
 }
