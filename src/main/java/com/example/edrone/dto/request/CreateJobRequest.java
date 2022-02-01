@@ -1,5 +1,6 @@
 package com.example.edrone.dto.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.Valid;
@@ -8,6 +9,7 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 @Data
+@AllArgsConstructor
 public class CreateJobRequest {
     @NotNull
     private int numberOfString;

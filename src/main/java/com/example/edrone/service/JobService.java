@@ -24,7 +24,6 @@ import java.util.*;
 public class JobService {
 
     private final JobRepository jobRepository;
-    private final Random random = new Random();
 
     public int getRunningJobsCount() {
         return Thread.getAllStackTraces().keySet().stream()
@@ -70,7 +69,7 @@ public class JobService {
     }
 
 
-    private Set<String> generateStringsList(CreateJobRequest createJobRequest) {
+    public Set<String> generateStringsList(CreateJobRequest createJobRequest) {
         Set<String> set = new HashSet<>(createJobRequest.getNumberOfString());
         while (set.size() < createJobRequest.getNumberOfString()) {
             String generatedString = generateSingleString(createJobRequest.getLength(), createJobRequest.getAllowedChars());
@@ -79,7 +78,8 @@ public class JobService {
         return set;
     }
 
-    private String generateSingleString(int length, List<Character> allowedChars) {
+    public String generateSingleString(int length, List<Character> allowedChars) {
+        Random random = new Random();
         StringBuilder stringBuilder = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
             char newChar = allowedChars.get(random.nextInt(allowedChars.size()));
@@ -104,7 +104,7 @@ public class JobService {
         return file;
     }
 
-    private void validateRequest(CreateJobRequest createJobRequest) {
+    public void validateRequest(CreateJobRequest createJobRequest) {
         int realSize = createJobRequest.getAllowedChars().stream().distinct().toList().size();
         int max = 1;
         for (int i = 0; i < createJobRequest.getLength(); i++) {

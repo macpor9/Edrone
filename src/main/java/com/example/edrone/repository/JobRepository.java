@@ -10,5 +10,6 @@ import java.util.Optional;
 @Repository
 public interface JobRepository extends JpaRepository<Job, Long> {
     Optional<Job> getFileById(long id);
+
     boolean existsByFile(File file);
 }
