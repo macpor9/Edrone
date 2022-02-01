@@ -1,4 +1,7 @@
 spring:
+  mvc:
+    async:
+      request-timeout: -1
   jpa:
     database-platform: com.example.edrone.configuration.SQLDialect
     hibernate.ddl-auto: update

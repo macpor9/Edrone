@@ -17,10 +17,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -39,17 +36,16 @@ public class JobService {
 
     public Job createJob(CreateJobRequest createJobRequest) {
         validateRequest(createJobRequest);
-        List<String> generatedStrings = generateStringsList(createJobRequest);
+        Set<String> generatedStrings = generateStringsList(createJobRequest);
         File file = generateFileWithStringsList(generatedStrings);
         Job job = new Job(file);
         return jobRepository.save(job);
     }
 
-    private File generateFileWithStringsList(List<String> generatedStrings) {
+    private File generateFileWithStringsList(Set<String> generatedStrings) {
         File file = null;
         try {
             file = new File(UUID.randomUUID() + ".txt");
-//            if (!file.exists()) file.createNewFile();
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             for (String s : generatedStrings) {
                 fileOutputStream.write(s.getBytes(StandardCharsets.UTF_8));
@@ -63,14 +59,14 @@ public class JobService {
         return file;
     }
 
-    private List<String> generateStringsList(CreateJobRequest createJobRequest) {
-        List<String> list = new ArrayList<>();
-        while (list.size() < createJobRequest.getNumberOfString()) {
+
+    private Set<String> generateStringsList(CreateJobRequest createJobRequest) {
+        Set<String> set = new HashSet<>(createJobRequest.getNumberOfString());
+        while (set.size() < createJobRequest.getNumberOfString()) {
             String generatedString = generateSingleString(createJobRequest.getLength(), createJobRequest.getAllowedChars());
-            if (!list.contains(generatedString))
-                list.add(generatedString);
+            set.add(generatedString);
         }
-        return list;
+        return set;
     }
 
     private String generateSingleString(int length, List<Character> allowedChars) {
